@@ -7,24 +7,21 @@ import collections
 from nltk import pos_tag, download as download_nltk_data
 
 
-class PathDoesNotExist(Exception):
-    pass
-
-
 class FuncNameParser:
-    def __init__(self, path, projects=('',), top_size=10):
+    def __init__(self, path, lookup='v', projects=('',), top_size=10):
         if not os.path.exists(path):
-            raise PathDoesNotExist()
+            raise Exception('Wrong path.')
 
         self.path = path
+        self.lookup = lookup
         self.projects = projects
         self.top_size = top_size
         self.words = []
 
-        self.parse_func_name(self.top_size)
+        self.parse(self.top_size)
 
 
-    def convert_list_of_tuple_to_list(self, list_of_tuple):
+    def convert_tpls_to_lst(self, list_of_tuple):
         """[(1,2), (3,4)] -> [1, 2, 3, 4]"""
         return [item for tuple_ in list_of_tuple for item in tuple_]
 
@@ -72,44 +69,60 @@ class FuncNameParser:
         return [word for word in function_name.split('_') if self.is_verb(word)]
 
 
+    def is_dunder(self, name):
+        """ __name__ """
+        return name.startswith("__") and name.endswith("__")
+
+
     def get_top_verbs_in_path(self, path, top_size):
         trees = [t for t in self.get_trees(path) if t]
-        fncs = [f for f in self.convert_list_of_tuple_to_list([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
-        verbs = self.convert_list_of_tuple_to_list([self.get_verbs_from_function_name(function_name) for function_name in fncs])
+        fncs = self.get_converted_func_names(trees)
+        verbs = self.convert_tpls_to_lst([self.get_verbs_from_function_name(function_name) for function_name in fncs])
         return collections.Counter(verbs).most_common(top_size)
 
 
-    def get_all_names(tree):
+    def get_all_names(self, tree):
         return [node.id for node in ast.walk(tree) if isinstance(node, ast.Name)]
 
 
-    def get_all_words_in_path(path):
-        trees = [t for t in get_trees(path) if t]
-        function_names = [f for f in convert_list_of_tuple_to_list([get_all_names(t) for t in trees]) if not (f.startswith('__') and f.endswith('__'))]
+    def get_all_func_names(self, tree):
+        return [node.name.lower() for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
 
-        def split_snake_case_name_to_words(name):
-            return [n for n in name.split('_') if n]
-
-        return convert_list_of_tuple_to_list([split_snake_case_name_to_words(function_name) for function_name in function_names])
+    def get_converted_func_names(self, trees):
+        return [f for f in self.convert_tpls_to_lst([self.get_all_func_names(t) for t in trees]) if not self.is_dunder(f)]
 
 
-    def get_top_functions_names_in_path(path, top_size=10):
-        t = get_trees(path)
-        nms = [f for f in convert_list_of_tuple_to_list([[node.name.lower() for node in ast.walk(t) if isinstance(node, ast.FunctionDef)] for t in t]) if not (f.startswith('__') and f.endswith('__'))]
-        return collections.Counter(nms).most_common(top_size)
+    def get_all_words_in_path(self, path, top_size):
+        trees = [t for t in self.get_trees(path) if t]
+        function_names = [f for f in self.convert_tpls_to_lst([self.get_all_names(t) for t in trees]) if not self.is_dunder(f)]
+        all_words_in_path = self.convert_tpls_to_lst([[n for n in function_name.split('_') if n] for function_name in function_names])
+        return collections.Counter(all_words_in_path).most_common(top_size)
 
 
-    def parse_func_name(self, top_size):
+    def get_top_functions_names_in_path(self, path, top_size):
+        trees = [t for t in self.get_trees(path) if t]
+        fncs = self.get_converted_func_names(trees)
+        return collections.Counter(fncs).most_common(top_size)
+
+
+    def parse(self, top_size):
         for project in self.projects:
             path = os.path.join(self.path, project)
-            self.words += self.get_top_verbs_in_path(path, top_size)
-        c = collections.Counter()
+            if self.lookup == 'v':
+                self.words += self.get_top_verbs_in_path(path, top_size)
+            elif self.lookup == 'a':
+                self.words += self.get_all_words_in_path(path, top_size)
+            elif self.lookup == 'w':
+                self.words += self.get_top_functions_names_in_path(path, top_size)
+            else:
+                raise Exception('Wrong lookup.')
+        count_words = collections.Counter()
         for word, count in self.words:
-            c[word] += count
-        if len(c) == 0:
-            result = 'There is no function name.'
-        elif len(c) < top_size:
-            result = f'All function name: {list(c.items())}'
+            count_words[word] += count
+        if len(count_words) == 0:
+            result = 'There is no results.'
+        elif len(count_words) < top_size:
+            result = f'All results: {list(count_words.items())}'
         else:
-            result = f'Top {top_size} function name: {list(c.items())[0:top_size]}'
+            result = f'Top {top_size} results: {list(count_words.items())[0:top_size]}'
         print(result)
