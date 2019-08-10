@@ -62,7 +62,7 @@ class FuncNameParser:
                     trees.append((filename, tree))
             else:
                 trees.append(tree)
-        return trees
+        return [t for t in trees if t]
 
 
     def get_verbs_from_function_name(self, function_name):
@@ -91,25 +91,22 @@ class FuncNameParser:
 
 
     def get_top_verbs_in_path(self, path, top_size):
-        trees = [t for t in self.get_trees(path) if t]
+        trees = self.get_trees(path)
         fncs = self.get_converted_names(trees, self.get_all_func_names)
         verbs = self.convert_tpls_to_lst([self.get_verbs_from_function_name(function_name) for function_name in fncs])
-        # return collections.Counter(verbs).most_common(top_size)
         return self.get_count_most_common(verbs, top_size)
 
 
     def get_all_words_in_path(self, path, top_size):
-        trees = [t for t in self.get_trees(path) if t]
+        trees = self.get_trees(path)
         function_names = self.get_converted_names(trees, self.get_all_names)
         all_words_in_path = self.convert_tpls_to_lst([[n for n in function_name.split('_') if n] for function_name in function_names])
-        # return collections.Counter(all_words_in_path).most_common(top_size)
         return self.get_count_most_common(all_words_in_path, top_size)
 
 
     def get_top_functions_names_in_path(self, path, top_size):
-        trees = [t for t in self.get_trees(path) if t]
+        trees = self.get_trees(path)
         fncs = self.get_converted_names(trees, self.get_all_func_names)
-        # return collections.Counter(fncs).most_common(top_size)
         return self.get_count_most_common(fncs, top_size)
 
 
