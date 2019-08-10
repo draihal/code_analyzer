@@ -62,7 +62,8 @@ class FuncNameParser:
                     trees.append((filename, tree))
             else:
                 trees.append(tree)
-        return [t for t in trees if t]
+        # return [t for t in trees if t]
+        return trees
 
 
     def get_verbs_from_function_name(self, function_name):
