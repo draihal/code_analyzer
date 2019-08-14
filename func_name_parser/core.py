@@ -1,10 +1,10 @@
 """Parser for most common function name."""
 
 import ast
-import os
 import collections
+import os
 
-from nltk import pos_tag, download as download_nltk_data
+from nltk import download as download_nltk_data, pos_tag
 
 
 class FuncNameParser:
@@ -62,7 +62,6 @@ class FuncNameParser:
                     trees.append((filename, tree))
             else:
                 trees.append(tree)
-        # return [t for t in trees if t]
         return trees
 
 
@@ -132,3 +131,4 @@ class FuncNameParser:
         else:
             result = f'Top {top_size} results: {list(count_words.items())[0:top_size]}'
         print(result)
+        return result

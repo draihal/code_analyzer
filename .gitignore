@@ -4,6 +4,7 @@
 flask/
 django/
 123.py
+correction.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

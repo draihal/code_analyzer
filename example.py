@@ -1,4 +1,4 @@
-from func_name_parser.core import FuncNameParser
+from func_name_parser import FuncNameParser
 
 
 path = 'D:\\py\\otus\\pyweb\\01\\'
@@ -7,7 +7,7 @@ path = 'D:\\py\\otus\\pyweb\\01\\'
 # a - get all most common words in any names in path
 # v - get most common verbs in function names in path
 # w - get most common words in functions names in path
-my_lookup = 'a'  # default v
+my_lookup = 'v'  # default v
 
 
 # default .\

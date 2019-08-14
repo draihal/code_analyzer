@@ -1,5 +1,5 @@
 import unittest
-from func_name_parser.core import FuncNameParser
+from func_name_parser import FuncNameParser
 
 
 class FuncNameParserTestCase(unittest.TestCase):
@@ -7,12 +7,11 @@ class FuncNameParserTestCase(unittest.TestCase):
     def setUp(self):
         self.path = 'C:\\'
         self.path_does_not_exist = 'CCC:\\'
-        self.lokup = 'test'
+        self.lookup = 'test'
         self.projects = (
             'testproject1',
             'testproject2',
         )
-
 
     def test_path_that_does_not_exist(self):
         self.assertRaises(
@@ -26,5 +25,5 @@ class FuncNameParserTestCase(unittest.TestCase):
             Exception,
             FuncNameParser,
             self.path,
-            self.lokup,
+            lookup=self.lookup,
         )
