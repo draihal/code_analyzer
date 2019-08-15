@@ -12,6 +12,7 @@ class FuncNameParserTestCase(unittest.TestCase):
             'testproject1',
             'testproject2',
         )
+        self.wrong_top_size = 0
 
     def test_path_that_does_not_exist(self):
         self.assertRaises(
@@ -26,4 +27,12 @@ class FuncNameParserTestCase(unittest.TestCase):
             FuncNameParser,
             self.path,
             lookup=self.lookup,
+        )
+
+    def test_wrong_top_size(self):
+        self.assertRaises(
+            Exception,
+            FuncNameParser,
+            self.path,
+            top_size=self.wrong_top_size,
         )

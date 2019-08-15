@@ -32,14 +32,25 @@ class FuncNameParser:
         self.words = []
 
     def _convert_tpls_to_lst(self, list_of_tuple):
-        """[(1,2), (3,4)] -> [1, 2, 3, 4]"""
+        """
+        Convert list of tuples to list.
+        [(1,2), (3,4)] -> [1, 2, 3, 4]
+        :param list_of_tuple: list of tuple
+        :return: list
+        """
         return [item for tuple_ in list_of_tuple for item in tuple_]
 
     def _is_verb(self, word):
+        """
+        Returns the boolean value of whether the word is a verb.
+        :param word: word
+        :return: boolean - True or False
+        """
         if not word:
             return False
         try:
             pos_info = pos_tag([word])
+            print(pos_info)
             return pos_info[0][1] == 'VB'
         except LookupError:
             download_nltk_data('averaged_perceptron_tagger')
@@ -47,6 +58,11 @@ class FuncNameParser:
             return pos_info[0][1] == 'VB'
 
     def _get_trees(self, path, with_filenames=False, with_file_content=False):
+        """
+        Returns lists of ast objects.
+        :param path: path
+        :return: lists of ast objects
+        """
         filenames = []
         trees = []
         for dirname, dirs, files in os.walk(path, topdown=True):
@@ -73,37 +89,83 @@ class FuncNameParser:
         return trees
 
     def _get_verbs_from_function_name(self, function_name):
+        """
+        Returns list with verb.
+        :param function_name: function name
+        :return: lists with verb
+        """
         return [word for word in function_name.split('_')
                 if self._is_verb(word)]
 
     def _is_dunder(self, name):
-        """ __name__ """
+        """
+        Returns boolean is a name a dunder method.
+        Like this: __name__.
+        :param name: name
+        :return: boolean - True or False
+        """
         return name.startswith("__") and name.endswith("__")
 
     def _get_all_names(self, tree):
+        """
+        Returns list of all words.
+        :param tree: _ast.Module object
+        :return: list with words
+        """
         return [node.id for node in ast.walk(tree)
                 if isinstance(node, ast.Name)]
 
     def _get_all_func_names(self, tree):
+        """
+        Returns list of all words.
+        :param tree: _ast.Module object
+        :return: list with words
+        """
         return [node.name.lower() for node in ast.walk(tree)
                 if isinstance(node, ast.FunctionDef)]
 
     def _get_converted_names(self, trees, func):
-        return [f for f in self._convert_tpls_to_lst([func(t) for t in trees])
+        """
+        Returns a list of words.
+        :param trees: list of _ast.Module object
+        :param func: function
+        :return: list with words
+        """
+        return [f for f in self._convert_tpls_to_lst(
+                [func(tree) for tree in trees])
                 if not self._is_dunder(f)]
 
     def _get_count_most_common(self, list_words, top_size):
+        """
+        Returns a list of tuples with words and his counts.
+        :param list_words: list of words
+        :param top_size: number of top words
+        :return: list of tuples with words and his counts
+        """
         return collections.Counter(list_words).most_common(top_size)
 
     def _get_top_verbs_in_path(self, path, top_size):
+        """
+        Returns a list of tuples with words and his counts.
+        :param path: path
+        :param top_size: number of top words
+        :return: list of tuples with words and his counts
+        """
         trees = self._get_trees(path)
         fncs = self._get_converted_names(trees, self._get_all_func_names)
         verbs = self._convert_tpls_to_lst(
             [self._get_verbs_from_function_name(function_name)
                 for function_name in fncs])
+        print('1', self._get_count_most_common(verbs, top_size))
         return self._get_count_most_common(verbs, top_size)
 
     def _get_all_words_in_path(self, path, top_size):
+        """
+        Returns a list of tuples with words and his counts.
+        :param path: path
+        :param top_size: number of top words
+        :return: list of tuples with words and his counts
+        """
         trees = self._get_trees(path)
         function_names = self._get_converted_names(trees, self._get_all_names)
         all_words_in_path = self._convert_tpls_to_lst(
@@ -112,11 +174,22 @@ class FuncNameParser:
         return self._get_count_most_common(all_words_in_path, top_size)
 
     def _get_top_functions_names_in_path(self, path, top_size):
+        """
+        Returns a list of tuples with words and his counts.
+        :param path: path
+        :param top_size: number of top words
+        :return: list of tuples with words and his counts
+        """
         trees = self._get_trees(path)
         fncs = self._get_converted_names(trees, self._get_all_func_names)
         return self._get_count_most_common(fncs, top_size)
 
-    def parse(self):
+    def parse(self):  #TODO: logging
+        """
+        Returns a list of tuples with words and his counts.
+
+        :return: list of tuples with words and his counts
+        """
         for project in self.projects:
             path = os.path.join(self.path, project)
             if self.lookup == 'v':
