@@ -172,7 +172,7 @@ class FuncNameParser:
         trees = self._get_trees(path)
         function_names = self._get_converted_names(trees, self._get_all_names)
         all_words_in_path = self._convert_tpls_to_lst(
-            [[n for n in function_name.split('_') if n]
+            [[word for word in function_name.split('_') if word]
                 for function_name in function_names])
         return self._get_count_most_common(all_words_in_path, top_size)
 
