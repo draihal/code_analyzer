@@ -55,7 +55,6 @@ class FuncNameParser:
             return False
         try:
             pos_info = pos_tag([word])
-            print(pos_info)
             return pos_info[0][1] == 'VB'
         except LookupError:
             download_nltk_data('averaged_perceptron_tagger')
@@ -136,9 +135,9 @@ class FuncNameParser:
         :param func: function
         :return: list with words
         """
-        return [f for f in self._convert_tpls_to_lst(
+        return [word for word in self._convert_tpls_to_lst(
                 [func(tree) for tree in trees])
-                if not self._is_dunder(f)]
+                if not self._is_dunder(word)]
 
     def _get_count_most_common(self, list_words, top_size):
         """
@@ -161,7 +160,6 @@ class FuncNameParser:
         verbs = self._convert_tpls_to_lst(
             [self._get_verbs_from_function_name(function_name)
                 for function_name in fncs])
-        print('1', self._get_count_most_common(verbs, top_size))
         return self._get_count_most_common(verbs, top_size)
 
     def _get_all_words_in_path(self, path, top_size):
