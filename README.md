@@ -50,11 +50,16 @@ my_projects = (
 my_top_size = 15
 
 
+# default = 100
+my_len_filenames = 100
+
+
 report = FuncNameParser(
     path,
     lookup=my_lookup,
     projects=my_projects,
-    top_size=my_top_size
+    top_size=my_top_size,
+    len_filenames=my_len_filenames
 ).parse()
 
 for word, count in report:
