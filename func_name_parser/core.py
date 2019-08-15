@@ -31,11 +31,9 @@ class FuncNameParser:
         self.top_size = top_size
         self.words = []
 
-
     def _convert_tpls_to_lst(self, list_of_tuple):
         """[(1,2), (3,4)] -> [1, 2, 3, 4]"""
         return [item for tuple_ in list_of_tuple for item in tuple_]
-
 
     def _is_verb(self, word):
         if not word:
@@ -47,7 +45,6 @@ class FuncNameParser:
             download_nltk_data('averaged_perceptron_tagger')
             pos_info = pos_tag([word])
             return pos_info[0][1] == 'VB'
-
 
     def _get_trees(self, path, with_filenames=False, with_file_content=False):
         filenames = []
@@ -75,51 +72,49 @@ class FuncNameParser:
                 trees.append(tree)
         return trees
 
-
     def _get_verbs_from_function_name(self, function_name):
-        return [word for word in function_name.split('_') if self._is_verb(word)]
-
+        return [word for word in function_name.split('_')
+                if self._is_verb(word)]
 
     def _is_dunder(self, name):
         """ __name__ """
         return name.startswith("__") and name.endswith("__")
 
-
     def _get_all_names(self, tree):
-        return [node.id for node in ast.walk(tree) if isinstance(node, ast.Name)]
-
+        return [node.id for node in ast.walk(tree)
+                if isinstance(node, ast.Name)]
 
     def _get_all_func_names(self, tree):
-        return [node.name.lower() for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
-
+        return [node.name.lower() for node in ast.walk(tree)
+                if isinstance(node, ast.FunctionDef)]
 
     def _get_converted_names(self, trees, func):
-        return [f for f in self._convert_tpls_to_lst([func(t) for t in trees]) if not self._is_dunder(f)]
-
+        return [f for f in self._convert_tpls_to_lst([func(t) for t in trees])
+                if not self._is_dunder(f)]
 
     def _get_count_most_common(self, list_words, top_size):
         return collections.Counter(list_words).most_common(top_size)
 
-
     def _get_top_verbs_in_path(self, path, top_size):
         trees = self._get_trees(path)
         fncs = self._get_converted_names(trees, self._get_all_func_names)
-        verbs = self._convert_tpls_to_lst([self._get_verbs_from_function_name(function_name) for function_name in fncs])
+        verbs = self._convert_tpls_to_lst(
+            [self._get_verbs_from_function_name(function_name)
+                for function_name in fncs])
         return self._get_count_most_common(verbs, top_size)
-
 
     def _get_all_words_in_path(self, path, top_size):
         trees = self._get_trees(path)
         function_names = self._get_converted_names(trees, self._get_all_names)
-        all_words_in_path = self._convert_tpls_to_lst([[n for n in function_name.split('_') if n] for function_name in function_names])
+        all_words_in_path = self._convert_tpls_to_lst(
+            [[n for n in function_name.split('_') if n]
+                for function_name in function_names])
         return self._get_count_most_common(all_words_in_path, top_size)
-
 
     def _get_top_functions_names_in_path(self, path, top_size):
         trees = self._get_trees(path)
         fncs = self._get_converted_names(trees, self._get_all_func_names)
         return self._get_count_most_common(fncs, top_size)
-
 
     def parse(self):
         for project in self.projects:
@@ -129,8 +124,10 @@ class FuncNameParser:
             elif self.lookup == 'a':
                 self.words += self._get_all_words_in_path(path, self.top_size)
             elif self.lookup == 'w':
-                self.words += self._get_top_functions_names_in_path(path, self.top_size)
+                self.words += self._get_top_functions_names_in_path(
+                    path, self.top_size)
         count_words = collections.Counter()
         for word, count in self.words:
             count_words[word] += count
-        return 0 if len(count_words) == 0 else [(word, count) for word, count in count_words.items()]
+        return 0 if len(count_words) == 0 else [(word, count)
+                    for word, count in count_words.items()]
