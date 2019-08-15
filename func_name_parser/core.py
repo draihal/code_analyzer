@@ -10,15 +10,26 @@ from nltk import download as download_nltk_data, pos_tag
 class FuncNameParser:
     def __init__(self, path, lookup='v', projects=('',), top_size=10):
         if not os.path.exists(path):
-            raise Exception('Wrong path.')
+            raise Exception(
+                'Something wend wrong. Is your path correct?\n'
+                f'It should be like: "C\\py\\". Your path is: "{path}".\n'
+            )
+        if lookup not in ['a', 'v', 'w']:
+            raise Exception(
+                'Something wend wrong. Is your lookup correct?\n'
+                f'It should be: "a", "v" or "w". Your lookup is: "{lookup}".\n'
+            )
+        if top_size <= 0:
+            raise Exception(
+                'Something wend wrong. Is your top size correct?\n'
+                f'It should be > 0. Your top size is {top_size}.\n'
+            )
 
         self.path = path
         self.lookup = lookup
         self.projects = projects
         self.top_size = top_size
         self.words = []
-
-        self.parse(self.top_size)
 
 
     def convert_tpls_to_lst(self, list_of_tuple):
@@ -110,25 +121,16 @@ class FuncNameParser:
         return self.get_count_most_common(fncs, top_size)
 
 
-    def parse(self, top_size):
+    def parse(self):
         for project in self.projects:
             path = os.path.join(self.path, project)
             if self.lookup == 'v':
-                self.words += self.get_top_verbs_in_path(path, top_size)
+                self.words += self.get_top_verbs_in_path(path, self.top_size)
             elif self.lookup == 'a':
-                self.words += self.get_all_words_in_path(path, top_size)
+                self.words += self.get_all_words_in_path(path, self.top_size)
             elif self.lookup == 'w':
-                self.words += self.get_top_functions_names_in_path(path, top_size)
-            else:
-                raise Exception('Wrong lookup.')
+                self.words += self.get_top_functions_names_in_path(path, self.top_size)
         count_words = collections.Counter()
         for word, count in self.words:
             count_words[word] += count
-        if len(count_words) == 0:
-            result = 'There is no results.'
-        elif len(count_words) < top_size:
-            result = f'All results: {list(count_words.items())}'
-        else:
-            result = f'Top {top_size} results: {list(count_words.items())[0:top_size]}'
-        print(result)
-        return result
+        return 0 if len(count_words) == 0 else [(word, count) for word, count in count_words.items()]

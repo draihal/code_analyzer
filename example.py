@@ -25,4 +25,14 @@ my_projects = (
 my_top_size = 15
 
 
-FuncNameParser(path, lookup=my_lookup, projects=my_projects, top_size=my_top_size)
+report = FuncNameParser(
+    path,
+    lookup=my_lookup,
+    projects=my_projects,
+    top_size=my_top_size
+).parse()
+
+for word, count in report:
+    print(word, count)
+# or print all
+print(report)
