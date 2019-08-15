@@ -1,8 +1,8 @@
 # Description
-
 >  Get most common function name from path to your code.
 
-## Usage
+## Installation
+
 clone the repo:
 ```
 git clone https://github.com/draihal/func_name_parser
@@ -18,7 +18,9 @@ or install package global:
 ```
 python setup.py install
 ```
----
+
+## Usage example
+
 example.py:
 ```
 from func_name_parser import FuncNameParser
