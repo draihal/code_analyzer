@@ -8,7 +8,11 @@ from nltk import download as download_nltk_data, pos_tag
 
 
 class FuncNameParser:
-    def __init__(self, path, lookup='v', projects=('',), top_size=10):
+    def __init__(
+        self, path, lookup='v',
+        projects=('',), top_size=10,
+        len_of_filenames=100
+        ):
         if not os.path.exists(path):
             raise Exception(
                 'Something wend wrong. Is your path correct?\n'
@@ -29,6 +33,7 @@ class FuncNameParser:
         self.lookup = lookup
         self.projects = projects
         self.top_size = top_size
+        self.len_of_filenames = len_of_filenames
         self.words = []
 
     def _convert_tpls_to_lst(self, list_of_tuple):
@@ -69,7 +74,7 @@ class FuncNameParser:
             for file in files:
                 if file.endswith('.py'):
                     filenames.append(os.path.join(dirname, file))
-                    if len(filenames) == 100:
+                    if len(filenames) == self.len_of_filenames:
                         break
         for filename in filenames:
             with open(filename, 'r', encoding='utf-8') as attempt_handler:
