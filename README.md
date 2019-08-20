@@ -1,11 +1,13 @@
-# Description
->  Get most common function name from path to your code.
+# Code Analyzer
+
+## Description
+>  Get most common words from your code.
 
 ## Installation
 
 clone the repo:
 ```
-git clone https://github.com/draihal/func_name_parser
+git clone https://github.com/draihal/code_analyzer
 cd func_name_parser
 ```
 create virtual environment and install package in it:
@@ -23,7 +25,7 @@ python setup.py install
 
 example.py:
 ```
-from func_name_parser import FuncNameParser
+from code_analyzer import CodeAnalyzer
 
 
 path = 'D:\\py\\otus\\pyweb\\01\\'
@@ -54,7 +56,7 @@ my_top_size = 15
 my_len_filenames = 100
 
 
-report = FuncNameParser(
+report = CodeAnalyzer(
     path,
     lookup=my_lookup,
     projects=my_projects,

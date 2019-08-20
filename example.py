@@ -1,4 +1,4 @@
-from func_name_parser import FuncNameParser
+from code_analyzer import CodeAnalyzer
 
 
 path = 'D:\\py\\otus\\pyweb\\01\\'
@@ -29,7 +29,7 @@ my_top_size = 15
 my_len_filenames = 100
 
 
-report = FuncNameParser(
+report = CodeAnalyzer(
     path,
     lookup=my_lookup,
     projects=my_projects,

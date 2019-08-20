@@ -1,5 +1,5 @@
 import unittest
-from func_name_parser import FuncNameParser
+from code_analyzer import CodeAnalyzer
 
 
 class FuncNameParserTestCase(unittest.TestCase):
@@ -18,14 +18,14 @@ class FuncNameParserTestCase(unittest.TestCase):
     def test_path_that_does_not_exist(self):
         self.assertRaises(
             Exception,
-            FuncNameParser,
+            CodeAnalyzer,
             self.path_does_not_exist,
         )
 
     def test_lokup_that_does_not_exist(self):
         self.assertRaises(
             Exception,
-            FuncNameParser,
+            CodeAnalyzer,
             self.path,
             lookup=self.lookup,
         )
@@ -33,7 +33,7 @@ class FuncNameParserTestCase(unittest.TestCase):
     def test_wrong_top_size(self):
         self.assertRaises(
             Exception,
-            FuncNameParser,
+            CodeAnalyzer,
             self.path,
             top_size=self.wrong_top_size,
         )
@@ -41,7 +41,7 @@ class FuncNameParserTestCase(unittest.TestCase):
     def test_wrong_len_filenames(self):
         self.assertRaises(
             Exception,
-            FuncNameParser,
+            CodeAnalyzer,
             self.path,
             len_filenames=self.len_filenames,
         )

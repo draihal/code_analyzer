@@ -1,4 +1,4 @@
-"""Parser for most common function name."""
+"""Parser for most common words from your code."""
 
 import ast
 import collections
@@ -8,13 +8,13 @@ import logging
 from nltk import download as download_nltk_data, pos_tag
 
 logging.basicConfig(
-    filename='code_parser.log',
+    filename='code_analyzer.log',
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%d-%b-%y %H:%M:%S',
     level=logging.INFO)
 
 
-class FuncNameParser:
+class CodeAnalyzer:
     def __init__(
             self, path, lookup='v',
             projects=('',), top_size=10,

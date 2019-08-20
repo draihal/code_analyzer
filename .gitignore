@@ -6,6 +6,7 @@ django/
 123.py
 correction.txt
 code_parser.log
+code_analyzer.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
