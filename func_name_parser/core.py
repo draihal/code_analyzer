@@ -4,29 +4,45 @@ import ast
 import collections
 import os
 
+import logging
 from nltk import download as download_nltk_data, pos_tag
+
+logging.basicConfig(
+    filename='code_parser.log',
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%d-%b-%y %H:%M:%S',
+    level=logging.INFO)
 
 
 class FuncNameParser:
     def __init__(
-        self, path, lookup='v',
-        projects=('',), top_size=10,
-        len_filenames=100
-        ):
+            self, path, lookup='v',
+            projects=('',), top_size=10,
+            len_filenames=100):
+        logging.info("Program started")
         if not os.path.exists(path):
+            logging.error("Exception occurred. Wrong path.")
             raise Exception(
                 'Something wend wrong. Is your path correct?\n'
                 f'It should be like: "C\\py\\". Your path is: "{path}".\n'
             )
         if lookup not in ['a', 'v', 'w']:
+            logging.error("Exception occurred. Wrong lookup.")
             raise Exception(
                 'Something wend wrong. Is your lookup correct?\n'
                 f'It should be: "a", "v" or "w". Your lookup is: "{lookup}".\n'
             )
         if top_size <= 0:
+            logging.error("Exception occurred. Wrong top_size.")
             raise Exception(
                 'Something wend wrong. Is your top size correct?\n'
                 f'It should be > 0. Your top size is {top_size}.\n'
+            )
+        if len_filenames <= 0:
+            logging.error("Exception occurred. Wrong len_filenames.")
+            raise Exception(
+                'Something wend wrong. Is your len of filenames correct?\n'
+                f'It should be > 0. Your len of filenames is {len_filenames}.\n'
             )
 
         self.path = path
@@ -57,9 +73,52 @@ class FuncNameParser:
             pos_info = pos_tag([word])
             return pos_info[0][1] == 'VB'
         except LookupError:
+            logging.warning("Download nltk data.")
             download_nltk_data('averaged_perceptron_tagger')
             pos_info = pos_tag([word])
             return pos_info[0][1] == 'VB'
+
+    def _get_filenames(self, path):
+        """
+        Get filenames from path.
+        :param path: path
+        :return: list
+        """
+        filenames = []
+        for dirname, dirs, files in os.walk(path, topdown=True):
+            for file in files:
+                if file.endswith('.py'):
+                    filenames.append(os.path.join(dirname, file))
+                    if len(filenames) == self.len_filenames:
+                        break
+        logging.info(f"Path is: {path}")
+        logging.info(f"Total {len(filenames)} files.")
+        return filenames
+
+    def _generate_trees(self, filename, with_filenames=False, with_file_content=False):
+        """
+        Generated trees.
+        :param filename: filename
+        :param with_filenames: boolean
+        :param with_file_content: boolean
+        :return: list of ast object
+        """
+        trees = []
+        with open(filename, 'r', encoding='utf-8') as attempt_handler:
+            main_file_content = attempt_handler.read()
+        try:
+            tree = ast.parse(main_file_content)
+        except SyntaxError as e:
+            logging.exception("Exception occurred.")
+            tree = None
+        if with_filenames:
+            if with_file_content:
+                trees.append((filename, main_file_content, tree))
+            else:
+                trees.append((filename, tree))
+        else:
+            trees.append(tree)
+        return trees
 
     def _get_trees(self, path, with_filenames=False, with_file_content=False):
         """
@@ -67,29 +126,10 @@ class FuncNameParser:
         :param path: path
         :return: lists of ast objects
         """
-        filenames = []
-        trees = []
-        for dirname, dirs, files in os.walk(path, topdown=True):
-            for file in files:
-                if file.endswith('.py'):
-                    filenames.append(os.path.join(dirname, file))
-                    if len(filenames) == self.len_filenames:
-                        break
-        for filename in filenames:
-            with open(filename, 'r', encoding='utf-8') as attempt_handler:
-                main_file_content = attempt_handler.read()
-            try:
-                tree = ast.parse(main_file_content)
-            except SyntaxError as e:
-                print(e)
-                tree = None
-            if with_filenames:
-                if with_file_content:
-                    trees.append((filename, main_file_content, tree))
-                else:
-                    trees.append((filename, tree))
-            else:
-                trees.append(tree)
+        filenames = self._get_filenames(path)
+        trees = [self._generate_trees(filename, with_filenames, with_file_content)[0]
+                 for filename in filenames]
+        logging.info("Trees generated.")
         return trees
 
     def _get_verbs_from_function_name(self, function_name):
@@ -103,7 +143,7 @@ class FuncNameParser:
 
     def _is_dunder(self, name):
         """
-        Returns boolean is a name a dunder method.
+        Returns boolean if a name is a dunder method.
         Like this: __name__.
         :param name: name
         :return: boolean - True or False
@@ -187,10 +227,9 @@ class FuncNameParser:
         fncs = self._get_converted_names(trees, self._get_all_func_names)
         return self._get_count_most_common(fncs, top_size)
 
-    def parse(self):  #TODO: logging
+    def parse(self):
         """
         Returns a list of tuples with words and his counts.
-
         :return: list of tuples with words and his counts
         """
         for project in self.projects:
@@ -205,5 +244,6 @@ class FuncNameParser:
         count_words = collections.Counter()
         for word, count in self.words:
             count_words[word] += count
+        logging.info("Done!")
         return 0 if len(count_words) == 0 else [(word, count)
                     for word, count in count_words.items()]

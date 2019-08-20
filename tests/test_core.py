@@ -13,6 +13,7 @@ class FuncNameParserTestCase(unittest.TestCase):
             'testproject2',
         )
         self.wrong_top_size = 0
+        self.len_filenames = 0
 
     def test_path_that_does_not_exist(self):
         self.assertRaises(
@@ -35,4 +36,12 @@ class FuncNameParserTestCase(unittest.TestCase):
             FuncNameParser,
             self.path,
             top_size=self.wrong_top_size,
+        )
+
+    def test_wrong_len_filenames(self):
+        self.assertRaises(
+            Exception,
+            FuncNameParser,
+            self.path,
+            len_filenames=self.len_filenames,
         )
