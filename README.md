@@ -1,14 +1,14 @@
 # Code Analyzer
 
 ## Description
->  Get most common words from your code.
+>  Get most common words from your code in cli.
 
 ## Installation
 
 clone the repo:
 ```
 git clone https://github.com/draihal/code_analyzer
-cd func_name_parser
+cd code_analyzer
 ```
 create virtual environment and install package in it:
 ```
@@ -20,54 +20,30 @@ or install package global:
 ```
 python setup.py install
 ```
+to uninstall:
+```
+pip uninstall code_analyzer
+```
 
 ## Usage example
-
-example.py:
+Type in cli:
 ```
-from code_analyzer import CodeAnalyzer
+code_analizer -h
+```
+```
+usage: code_analyzer [-p PATH] [-l {v,w,a}] [-pr PROJECTS] [-s TOP_SIZE]
+                     [-lf LEN_FILENAMES] [--help] [--version]
 
+Get most common words from your code.
 
-path = 'D:\\py\\otus\\pyweb\\01\\'
-
-
-# a - get all most common words in any names in path
-# v - get most common verbs in function names in path
-# w - get most common words in functions names in path
-my_lookup = 'v'  # default v
-
-
-# default .\
-my_projects = (
-    'django',
-    'flask',
-    'pyramid',
-    'reddit',
-    'requests',
-    'sqlalchemy',
-)
-
-
-# default 10
-my_top_size = 15
-
-
-# default = 100
-my_len_filenames = 100
-
-
-report = CodeAnalyzer(
-    path,
-    lookup=my_lookup,
-    projects=my_projects,
-    top_size=my_top_size,
-    len_filenames=my_len_filenames
-).parse()
-
-for word, count in report:
-    print(word, count)
-# or print all
-print(report)
+optional arguments:
+  -p PATH, --path PATH  Path to the code directory
+  -l {v,w,a}, --lookup {v,w,a}
+  -pr PROJECTS, --projects PROJECTS
+  -s TOP_SIZE, --top_size TOP_SIZE
+  -lf LEN_FILENAMES, --len_filenames LEN_FILENAMES
+  --help, -h            Help
+  --version             Version
 ```
 ---
 running tests:

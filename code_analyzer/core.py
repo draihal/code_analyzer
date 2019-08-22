@@ -1,4 +1,7 @@
-"""Parser for most common words from your code."""
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+"""Code analyzer."""
 
 import ast
 import collections
@@ -6,6 +9,8 @@ import os
 
 import logging
 from nltk import download as download_nltk_data, pos_tag
+
+current_path = os.path.abspath(os.path.dirname(__file__))
 
 logging.basicConfig(
     filename='code_analyzer.log',
@@ -16,7 +21,7 @@ logging.basicConfig(
 
 class CodeAnalyzer:
     def __init__(
-            self, path, lookup='v',
+            self, path='C:\\', lookup='v',
             projects=('',), top_size=10,
             len_filenames=100):
         logging.info("Program started")
@@ -24,7 +29,7 @@ class CodeAnalyzer:
             logging.error("Exception occurred. Wrong path.")
             raise Exception(
                 'Something wend wrong. Is your path correct?\n'
-                f'It should be like: "C\\py\\". Your path is: "{path}".\n'
+                f'It should be like: "C:\\py\\". Your path is: "{path}".\n'
             )
         if lookup not in ['a', 'v', 'w']:
             logging.error("Exception occurred. Wrong lookup.")

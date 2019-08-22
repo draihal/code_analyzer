@@ -47,4 +47,9 @@ setup(
     packages=find_packages(),
     test_suite='tests',
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'code_analyzer=code_analyzer:main',
+        ],
+    },
 )
