@@ -8,6 +8,7 @@ import sys
 
 from .core import CodeAnalyzer
 from .parse_args import create_parser
+from .output import make_output
 
 
 def main():
@@ -40,6 +41,5 @@ def main():
         len_filenames=namespace.number_filenames,
         github_path=namespace.github_path,
     ).parse()
-    # done = True
-    # sys.stdout.write('\rDone!     ')
-    sys.stdout.write(f'\rYour result is: {report}')
+    make_output(namespace.output_format, report)
+    sys.stdout.write('\rDone!')

@@ -3,6 +3,7 @@ import os
 
 
 class ValidateGitURL(argparse.Action):
+    """Validate url to git repository."""
     def __call__(self, parser, args, values, option_string=None):
         if not values.startswith('https://github.com/') or not values.endswith('.git'):
             # logging.error('Exception occurred.  ValidateGitURL.')
@@ -14,6 +15,7 @@ class ValidateGitURL(argparse.Action):
 
 
 class ValidatePositiveInt(argparse.Action):
+    """Validate is int a positive."""
     def __call__(self, parser, args, values, option_string=None):
         if values <= 0:
             # logging.error('Exception occurred. ValidatePositiveInt.')
@@ -25,6 +27,7 @@ class ValidatePositiveInt(argparse.Action):
 
 
 class ValidateOSPath(argparse.Action):
+    """Validate that os path exist."""
     def __call__(self, parser, args, values, option_string=None):
         if not os.path.exists(values):
             # logging.error('Exception occurred.  ValidateOSPath.')
