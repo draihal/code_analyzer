@@ -5,12 +5,13 @@
 
 import ast
 import collections
-import os
-
 import logging
-from nltk import download as download_nltk_data, pos_tag
+import os
+import shutil
+import tempfile
 
-current_path = os.path.abspath(os.path.dirname(__file__))
+from git import Repo
+from nltk import download as download_nltk_data, pos_tag
 
 logging.basicConfig(
     filename='code_analyzer.log',
@@ -23,34 +24,10 @@ class CodeAnalyzer:
     def __init__(
             self, path='C:\\', lookup='v',
             projects=('',), top_size=10,
-            len_filenames=100):
-        logging.info("Program started")
-        if not os.path.exists(path):
-            logging.error("Exception occurred. Wrong path.")
-            raise Exception(
-                'Something wend wrong. Is your path correct?\n'
-                f'It should be like: "C:\\py\\". Your path is: "{path}".\n'
-            )
-        if lookup not in ['a', 'v', 'w']:
-            logging.error("Exception occurred. Wrong lookup.")
-            raise Exception(
-                'Something wend wrong. Is your lookup correct?\n'
-                f'It should be: "a", "v" or "w". Your lookup is: "{lookup}".\n'
-            )
-        if top_size <= 0:
-            logging.error("Exception occurred. Wrong top_size.")
-            raise Exception(
-                'Something wend wrong. Is your top size correct?\n'
-                f'It should be > 0. Your top size is {top_size}.\n'
-            )
-        if len_filenames <= 0:
-            logging.error("Exception occurred. Wrong len_filenames.")
-            raise Exception(
-                'Something wend wrong. Is your len of filenames correct?\n'
-                f'It should be > 0. Your len of filenames is {len_filenames}.\n'
-            )
-
+            len_filenames=100, github_path=None,):
+        logging.info("Program started.")
         self.path = path
+        self.github_path = github_path
         self.lookup = lookup
         self.projects = projects
         self.top_size = top_size
@@ -96,7 +73,7 @@ class CodeAnalyzer:
                     filenames.append(os.path.join(dirname, file))
                     if len(filenames) == self.len_filenames:
                         break
-        logging.info(f"Path is: {path}")
+        logging.info(f"Path is: {path}.")
         logging.info(f"Total {len(filenames)} files.")
         return filenames
 
@@ -237,18 +214,42 @@ class CodeAnalyzer:
         Returns a list of tuples with words and his counts.
         :return: list of tuples with words and his counts
         """
-        for project in self.projects:
-            path = os.path.join(self.path, project)
-            if self.lookup == 'v':
-                self.words += self._get_top_verbs_in_path(path, self.top_size)
-            elif self.lookup == 'a':
-                self.words += self._get_all_words_in_path(path, self.top_size)
-            elif self.lookup == 'w':
-                self.words += self._get_top_functions_names_in_path(
-                    path, self.top_size)
-        count_words = collections.Counter()
-        for word, count in self.words:
-            count_words[word] += count
-        logging.info("Done!")
-        return 0 if len(count_words) == 0 else [(word, count)
-                    for word, count in count_words.items()]
+        if self.github_path:
+            tmpdir = tempfile.mkdtemp()
+            logging.info(f'Created temporary directory: {tmpdir}.')
+            Repo.clone_from(self.github_path, tmpdir)
+            for project in self.projects:
+                path = os.path.join(tmpdir, project)
+                if self.lookup == 'v':
+                    self.words += self._get_top_verbs_in_path(path, self.top_size)
+                elif self.lookup == 'a':
+                    self.words += self._get_all_words_in_path(path, self.top_size)
+                elif self.lookup == 'w':
+                    self.words += self._get_top_functions_names_in_path(
+                        path, self.top_size)
+            count_words = collections.Counter()
+            for word, count in self.words:
+                count_words[word] += count
+            try:
+                shutil.rmtree(tmpdir)
+            except PermissionError:
+                logging.info('Can\'t deleting temp directory.  Access is denied.')
+            logging.info('Done!')
+            return 0 if len(count_words) == 0 else [(word, count)
+                                                    for word, count in count_words.items()]
+        else:
+            for project in self.projects:
+                path = os.path.join(self.path, project)
+                if self.lookup == 'v':
+                    self.words += self._get_top_verbs_in_path(path, self.top_size)
+                elif self.lookup == 'a':
+                    self.words += self._get_all_words_in_path(path, self.top_size)
+                elif self.lookup == 'w':
+                    self.words += self._get_top_functions_names_in_path(
+                        path, self.top_size)
+            count_words = collections.Counter()
+            for word, count in self.words:
+                count_words[word] += count
+            logging.info("Done!")
+            return 0 if len(count_words) == 0 else [(word, count)
+                        for word, count in count_words.items()]

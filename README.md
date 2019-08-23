@@ -1,7 +1,7 @@
 # Code Analyzer
 
 ## Description
->  Get most common words from your code in cli.
+>  Get most common words from code in cli.
 
 ## Installation
 
@@ -31,19 +31,32 @@ Type in cli:
 code_analizer -h
 ```
 ```
-usage: code_analyzer [-p PATH] [-l {v,w,a}] [-pr PROJECTS] [-s TOP_SIZE]
-                     [-lf LEN_FILENAMES] [--help] [--version]
+usage: code_analyzer [-p PATH] [-g GITHUB_PATH] [-l {v,w,a}] [-pr PROJECTS]
+                     [-s TOP_SIZE] [-n NUMBER_FILENAMES] [-o {json,txt,csv}]
+                     [-h] [-v]
 
-Get most common words from your code.
+Get most common words from code.
 
 optional arguments:
-  -p PATH, --path PATH  Path to the code directory
+  -p PATH, --path PATH  Path to the directory with code to analyse, default
+                        current directory
+  -g GITHUB_PATH, --github_path GITHUB_PATH
+                        The URL to github repository with code to analyse,
+                        default None
   -l {v,w,a}, --lookup {v,w,a}
+                        Type of analyzing, default "v". "v" - ..., "w" - ...,
+                        "a" - ....
   -pr PROJECTS, --projects PROJECTS
+                        Dirnames with projects with code to analyse, default
+                        current directory
   -s TOP_SIZE, --top_size TOP_SIZE
-  -lf LEN_FILENAMES, --len_filenames LEN_FILENAMES
-  --help, -h            Help
-  --version             Version
+                        Top amount of words to report, default 10
+  -n NUMBER_FILENAMES, --number_filenames NUMBER_FILENAMES
+                        Max numbers of filenames to analyse, default 100
+  -o {json,txt,csv}, --output_format {json,txt,csv}
+                        Output report file format, default output to cli
+  -h, --help            Help
+  -v, --version         Version
 ```
 ---
 running tests:

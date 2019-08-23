@@ -12,7 +12,7 @@ except ImportError:
 
 # Package meta-data.
 NAME = 'code_analyzer'
-DESCRIPTION = 'Get most common words from your code.'
+DESCRIPTION = 'Get most common words from code.'
 URL = 'https://github.com/draihal/code_analyzer'
 EMAIL = 'draihal@gmail.com'
 AUTHOR = 'draihal'
@@ -20,6 +20,7 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.0.2'
 REQUIRED = [
     'nltk ~= 3.4.4',
+    'GitPython ~= 3.0.2',
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
