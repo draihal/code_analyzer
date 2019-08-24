@@ -3,11 +3,8 @@
 .idea
 flask/
 django/
-123.py
 correction.txt
-code_parser.log
 code_analyzer.log
-example.py
 code_analyzer_report.txt
 code_analyzer_report.json
 code_analyzer_report.csv

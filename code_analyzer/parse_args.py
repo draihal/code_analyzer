@@ -29,14 +29,16 @@ def create_parser():
         help='The URL to github repository with code to analyse, default None',)
     parser.add_argument(
         '-l', '--lookup', type=str,
-        default='v', choices=['v', 'w', 'a'],
+        default='v', choices=['v', 'n', 'f', 'lv'],
         help='''Type of analyzing, default "v". 
-            "v" - ..., 
-            "a" - ...,
-            "w" - ...''',)
+            "v" - verb - show statistics of the most common words by verbs,  
+            "n" - noun - show statistics on the most frequent words by nouns,  
+            "f" - funcname - show statistics of the most common words function names ,   
+            "lv" - localvarname - show statistics of the most common words names of local variables inside functions.
+            ''',)
     parser.add_argument(
-        '-pr', '--projects', type=set,
-        default=('',),
+        '-pr', '--projects',
+        default=[], nargs='+',
         help='Dirnames with projects with code to analyse, default current directory',)
     parser.add_argument(
         '-s', '--top_size', type=int,
