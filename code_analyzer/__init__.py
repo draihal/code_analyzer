@@ -41,5 +41,6 @@ def main():
         len_filenames=namespace.number_filenames,
         github_path=namespace.github_path,
     ).parse()
+    # done = True
     make_output(namespace.output_format, report)
     sys.stdout.write('\rDone!')

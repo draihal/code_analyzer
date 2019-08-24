@@ -1,15 +1,14 @@
 import argparse
 import os
 from pathlib import Path
-# from ..setup import AUTHOR, DESCRIPTION, VERSION, NAME
+
+from .args_validators import ValidateGitURL, ValidatePositiveInt, ValidateOSPath
+# from ..setup import DESCRIPTION, VERSION, NAME
 # sys.path.append(sys.path[0] + "/..")
 # ValueError: attempted relative import beyond top-level package
 
-from .args_validators import ValidateGitURL, ValidatePositiveInt, ValidateOSPath
-
 NAME = 'code_analyzer'
 DESCRIPTION = 'Get most common words from code.'
-AUTHOR = 'draihal'
 VERSION = '0.0.2'
 
 
@@ -18,7 +17,6 @@ def create_parser():
     parser = argparse.ArgumentParser(
         prog=NAME,
         description=DESCRIPTION,
-        epilog=f'''(c) {AUTHOR} 2019.''',
         add_help=False
     )
     parser.add_argument(
@@ -32,7 +30,10 @@ def create_parser():
     parser.add_argument(
         '-l', '--lookup', type=str,
         default='v', choices=['v', 'w', 'a'],
-        help='Type of analyzing, default "v". "v" - ..., "w" - ..., "a" - ....',)
+        help='''Type of analyzing, default "v". 
+            "v" - ..., 
+            "a" - ...,
+            "w" - ...''',)
     parser.add_argument(
         '-pr', '--projects', type=set,
         default=('',),
@@ -48,7 +49,7 @@ def create_parser():
     parser.add_argument(
         '-o', '--output_format',
         default=None, choices=['json', 'txt', 'csv'],
-        help='Output report file format, default output to cli',)
+        help='Output report file format to current directory, default output to cli',)
 
     parser.add_argument(
         '-h', '--help',

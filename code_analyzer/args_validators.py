@@ -1,12 +1,13 @@
 import argparse
 import os
+import logging
 
 
 class ValidateGitURL(argparse.Action):
     """Validate url to git repository."""
     def __call__(self, parser, args, values, option_string=None):
         if not values.startswith('https://github.com/') or not values.endswith('.git'):
-            # logging.error('Exception occurred.  ValidateGitURL.')
+            logging.error('Exception occurred.  ValidateGitURL.')
             raise argparse.ArgumentError(
                 self,
                 '''Something wend wrong. Is your path correct?\n
@@ -18,7 +19,7 @@ class ValidatePositiveInt(argparse.Action):
     """Validate is int a positive."""
     def __call__(self, parser, args, values, option_string=None):
         if values <= 0:
-            # logging.error('Exception occurred. ValidatePositiveInt.')
+            logging.error('Exception occurred. ValidatePositiveInt.')
             raise argparse.ArgumentError(
                 self,
                 '''Something wend wrong. Is your number is correct?\n
@@ -30,7 +31,7 @@ class ValidateOSPath(argparse.Action):
     """Validate that os path exist."""
     def __call__(self, parser, args, values, option_string=None):
         if not os.path.exists(values):
-            # logging.error('Exception occurred.  ValidateOSPath.')
+            logging.error('Exception occurred.  ValidateOSPath.')
             raise argparse.ArgumentError(
                 self,
                 f'''Something wend wrong. Is your path correct?\n

@@ -44,8 +44,8 @@ optional arguments:
                         The URL to github repository with code to analyse,
                         default None
   -l {v,w,a}, --lookup {v,w,a}
-                        Type of analyzing, default "v". "v" - ..., "w" - ...,
-                        "a" - ....
+                        Type of analyzing, default "v". "v" - ..., "a" - ...,
+                        "w" - ...
   -pr PROJECTS, --projects PROJECTS
                         Dirnames with projects with code to analyse, default
                         current directory
@@ -54,7 +54,8 @@ optional arguments:
   -n NUMBER_FILENAMES, --number_filenames NUMBER_FILENAMES
                         Max numbers of filenames to analyse, default 100
   -o {json,txt,csv}, --output_format {json,txt,csv}
-                        Output report file format, default output to cli
+                        Output report file format to current directory,
+                        default output to cli
   -h, --help            Help
   -v, --version         Version
 ```
