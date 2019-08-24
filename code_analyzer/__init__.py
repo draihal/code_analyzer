@@ -7,8 +7,8 @@ import sys
 # import time
 
 from .core import CodeAnalyzer
-from .parse_args import create_parser
 from .output import make_output
+from .parse_args import create_parser
 
 
 def main():

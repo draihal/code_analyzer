@@ -7,7 +7,7 @@ from git import Repo
 
 from .ast_analysis import _get_all_names, _get_all_func_names, _generate_trees
 from .ntlk_analysis import _get_verbs_from_function_name, _get_nouns_from_function_name
-from .utils import _convert_tpls_to_lst, _get_count_most_common, _get_converted_names
+from .utils import _get_count_most_common, _get_converted_names, _convert_tpls_to_lst
 
 
 logging.basicConfig(

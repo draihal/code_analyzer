@@ -2,7 +2,7 @@ import argparse
 import os
 from pathlib import Path
 
-from .args_validators import ValidateGitURL, ValidatePositiveInt, ValidateOSPath
+from .args_validators import ValidateGitURL, ValidateOSPath, ValidatePositiveInt
 # from ..setup import DESCRIPTION, VERSION, NAME
 # sys.path.append(sys.path[0] + "/..")
 # ValueError: attempted relative import beyond top-level package

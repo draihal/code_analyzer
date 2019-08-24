@@ -1,7 +1,7 @@
 import csv
-import os
 import json
 import logging
+import os
 
 
 def make_output_to_cli(report):

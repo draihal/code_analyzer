@@ -1,6 +1,6 @@
 import argparse
-import os
 import logging
+import os
 
 
 class ValidateGitURL(argparse.Action):
