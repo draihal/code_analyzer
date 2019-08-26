@@ -1,12 +1,14 @@
-# Description
->  Get most common function name from path to your code.
+# Code Analyzer
+
+## Description
+>  Get most common words from code in cli.
 
 ## Installation
 
 clone the repo:
 ```
-git clone https://github.com/draihal/func_name_parser
-cd func_name_parser
+git clone https://github.com/draihal/code_analyzer
+cd code_analyzer
 ```
 create virtual environment and install package in it:
 ```
@@ -18,54 +20,49 @@ or install package global:
 ```
 python setup.py install
 ```
+to uninstall:
+```
+pip uninstall code_analyzer
+```
 
 ## Usage example
-
-example.py:
+Type in cli:
 ```
-from func_name_parser import FuncNameParser
+code_analizer -h
+```
+```
+usage: code_analyzer [-p PATH] [-g GITHUB_PATH] [-l {v,n,f,lv}]
+                     [-pr PROJECTS [PROJECTS ...]] [-s TOP_SIZE]
+                     [-n NUMBER_FILENAMES] [-o {json,txt,csv}] [-h] [-v]
 
+Get most common words from code.
 
-path = 'D:\\py\\otus\\pyweb\\01\\'
-
-
-# a - get all most common words in any names in path
-# v - get most common verbs in function names in path
-# w - get most common words in functions names in path
-my_lookup = 'v'  # default v
-
-
-# default .\
-my_projects = (
-    'django',
-    'flask',
-    'pyramid',
-    'reddit',
-    'requests',
-    'sqlalchemy',
-)
-
-
-# default 10
-my_top_size = 15
-
-
-# default = 100
-my_len_filenames = 100
-
-
-report = FuncNameParser(
-    path,
-    lookup=my_lookup,
-    projects=my_projects,
-    top_size=my_top_size,
-    len_filenames=my_len_filenames
-).parse()
-
-for word, count in report:
-    print(word, count)
-# or print all
-print(report)
+optional arguments:
+  -p PATH, --path PATH  Path to the directory with code to analyse, default
+                        current directory
+  -g GITHUB_PATH, --github_path GITHUB_PATH
+                        The URL to github repository with code to analyse,
+                        default None
+  -l {v,n,f,lv}, --lookup {v,n,f,lv}
+                        Type of analyzing, default "v". "v" - verb - show
+                        statistics of the most common words by verbs, "n" -
+                        noun - show statistics on the most frequent words by
+                        nouns, "f" - funcname - show statistics of the most
+                        common words function names , "lv" - localvarname -
+                        show statistics of the most common words names of
+                        local variables inside functions.
+  -pr PROJECTS [PROJECTS ...], --projects PROJECTS [PROJECTS ...]
+                        Dirnames with projects with code to analyse, default
+                        current directory
+  -s TOP_SIZE, --top_size TOP_SIZE
+                        Top amount of words to report, default 10
+  -n NUMBER_FILENAMES, --number_filenames NUMBER_FILENAMES
+                        Max numbers of filenames to analyse, default 100
+  -o {json,txt,csv}, --output_format {json,txt,csv}
+                        Output report file format to current directory,
+                        default output to cli
+  -h, --help            Help
+  -v, --version         Version
 ```
 ---
 running tests:

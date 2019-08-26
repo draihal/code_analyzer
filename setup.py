@@ -11,15 +11,16 @@ except ImportError:
 
 
 # Package meta-data.
-NAME = 'func_name_parser'
-DESCRIPTION = 'Get most common function name from path to your code.'
-URL = 'https://github.com/draihal/func_name_parser'
+NAME = 'code_analyzer'
+DESCRIPTION = 'Get most common words from code.'
+URL = 'https://github.com/draihal/code_analyzer'
 EMAIL = 'draihal@gmail.com'
 AUTHOR = 'draihal'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 REQUIRED = [
     'nltk ~= 3.4.4',
+    'GitPython ~= 3.0.2',
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -47,4 +48,9 @@ setup(
     packages=find_packages(),
     test_suite='tests',
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'code_analyzer=code_analyzer:main',
+        ],
+    },
 )
