@@ -5,7 +5,8 @@ from nltk import download as download_nltk_data, pos_tag
 
 def _is_verb(word):
     """
-    Returns the boolean value of whether the word is a verb.
+    Return the boolean value of whether the word is a verb.
+
     :param word: word
     :return: boolean - True or False
     """
@@ -23,7 +24,8 @@ def _is_verb(word):
 
 def _is_nouns(word):
     """
-    Returns the boolean value of whether the word is a nouns.
+    Return the boolean value of whether the word is a nouns.
+
     :param word: word
     :return: boolean - True or False
     """
@@ -41,19 +43,19 @@ def _is_nouns(word):
 
 def _get_verbs_from_function_name(function_name):
     """
-    Returns list with verb.
+    Return list with verb.
+
     :param function_name: function name
     :return: lists with verb
     """
-    return [word for word in function_name.split('_')
-            if _is_verb(word)]
+    return (word for word in function_name.split('_') if _is_verb(word))
 
 
 def _get_nouns_from_function_name(function_name):
     """
-    Returns list with nouns.
+    Return list with nouns.
+
     :param function_name: function name
     :return: lists with nouns
     """
-    return [word for word in function_name.split('_')
-            if _is_nouns(word)]
+    return (word for word in function_name.split('_') if _is_nouns(word))

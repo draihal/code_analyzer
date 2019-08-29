@@ -12,7 +12,7 @@ from .parse_args import create_parser
 
 
 def main():
-    """Entry point for the application script"""
+    """Entry point for the application script."""
     parser = create_parser()
     namespace = parser.parse_args(sys.argv[1:])
 
