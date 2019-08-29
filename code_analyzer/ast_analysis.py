@@ -4,27 +4,29 @@ import logging
 
 def _get_all_names(tree):
     """
-    Returns list of all words.
+    Return list of all words.
+
     :param tree: _ast.Module object
     :return: list with words
     """
-    return [node.id for node in ast.walk(tree)
-            if isinstance(node, ast.Name)]
+    return (node.id for node in ast.walk(tree) if isinstance(node, ast.Name))
 
 
 def _get_all_func_names(tree):
     """
-    Returns list of all words.
+    Return list of all words.
+
     :param tree: _ast.Module object
     :return: list with words
     """
-    return [node.name.lower() for node in ast.walk(tree)
-            if isinstance(node, ast.FunctionDef)]
+    return (node.name.lower() for node in ast.walk(tree)
+            if isinstance(node, ast.FunctionDef))
 
 
 def _generate_trees(filename, with_filenames=False, with_file_content=False):
     """
     Generated trees.
+
     :param filename: filename
     :param with_filenames: boolean
     :param with_file_content: boolean

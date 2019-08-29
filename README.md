@@ -31,7 +31,8 @@ Type in cli:
 code_analizer -h
 ```
 ```
-usage: code_analyzer [-p PATH] [-g GITHUB_PATH] [-l {v,n,f,lv}]
+usage: code_analyzer [-p PATH] [-g GITHUB_PATH]
+                     [-l {verb,noun,funcname,localvarname}]
                      [-pr PROJECTS [PROJECTS ...]] [-s TOP_SIZE]
                      [-n NUMBER_FILENAMES] [-o {json,txt,csv}] [-h] [-v]
 
@@ -43,14 +44,14 @@ optional arguments:
   -g GITHUB_PATH, --github_path GITHUB_PATH
                         The URL to github repository with code to analyse,
                         default None
-  -l {v,n,f,lv}, --lookup {v,n,f,lv}
-                        Type of analyzing, default "v". "v" - verb - show
-                        statistics of the most common words by verbs, "n" -
-                        noun - show statistics on the most frequent words by
-                        nouns, "f" - funcname - show statistics of the most
-                        common words function names , "lv" - localvarname -
-                        show statistics of the most common words names of
-                        local variables inside functions.
+  -l {verb,noun,funcname,localvarname}, --lookup {verb,noun,funcname,localvarname}
+                        Type of analyzing, default "verb". "verb" - show
+                        statistics of the most common words by verbs, "noun" -
+                        show statistics on the most frequent words by nouns,
+                        "funcname" - show statistics of the most common words
+                        function names , "localvarname" - show statistics of
+                        the most common words names of local variables inside
+                        functions.
   -pr PROJECTS [PROJECTS ...], --projects PROJECTS [PROJECTS ...]
                         Dirnames with projects with code to analyse, default
                         current directory
@@ -65,5 +66,3 @@ optional arguments:
   -v, --version         Version
 ```
 ---
-running tests:
-```$ python setup.py test```
