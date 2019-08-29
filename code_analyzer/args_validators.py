@@ -37,5 +37,5 @@ class ValidateOSPath(argparse.Action):
             logging.error('Exception occurred.  ValidateOSPath.')
             raise argparse.ArgumentError(
                 self, f'''Something wend wrong. Is your path correct?\n
-                'It should be like: "C:\\py\\". Your path is: "{values}".\n''')
+                It should be like: "C:\\py\\". Your path is: "{values}".\n''')
         setattr(args, self.dest, values)
